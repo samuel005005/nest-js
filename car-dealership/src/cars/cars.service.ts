@@ -11,6 +11,16 @@ export class CarsService {
             id: uuid(),
             brand: 'Toyota',
             model: 'Corolla'
+        },
+        {
+            id: uuid(),
+            brand: 'Toyota',
+            model: 'Vitz'
+        },
+        {
+            id: uuid(),
+            brand: 'For',
+            model: 'Scape'
         }
     ]
 
