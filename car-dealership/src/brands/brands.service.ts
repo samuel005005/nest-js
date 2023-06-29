@@ -33,7 +33,7 @@ export class BrandsService {
   }
 
   update(id: string, updateBrandDto: UpdateBrandDto) {
-    let brandDB = this.findOne(id);
+    let brandDB :Brand = this.findOne(id);
     this.brands = this.brands.map(brand => {
       if (brand.id === id) {
         brandDB.updateAt = new Date().getTime();
