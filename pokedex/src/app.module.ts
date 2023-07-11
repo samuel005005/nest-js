@@ -4,6 +4,7 @@ import { join } from 'path';
 import { PokemonModule } from './pokemon/pokemon.module';
 import { ShareModule } from './shared/share.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { SeedModule } from './seed/seed.module';
 
 
 @Module({
@@ -13,7 +14,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     }),
     MongooseModule.forRoot('mongodb+srv://samuel005005:YAjRkJFW0MZocHJ8@cluster0.dsh77xk.mongodb.net/?retryWrites=true&w=majority'),
     PokemonModule,
-    ShareModule
+    ShareModule,
+    SeedModule
   ],
 })
 export class AppModule { }

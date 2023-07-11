@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus
 import { CreatePokemonDto } from '../dto/create-pokemon.dto';
 import { UpdatePokemonDto } from '../dto/update-pokemon.dto';
 import { PokemonService } from '../services/pokemon.service';
-import { ParseMongoIdPipe } from 'src/shared/infrastructure/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
+import { ParseMongoIdPipe } from 'src/shared/infrastructure/pipes/parse-mongo-id/parse-mongo-id.pipe';
 
 @Controller('pokemon')
 export class PokemonController {

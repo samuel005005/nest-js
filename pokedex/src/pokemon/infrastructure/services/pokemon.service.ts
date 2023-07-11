@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePokemonDto } from '../dto/create-pokemon.dto';
 import { UpdatePokemonDto } from '../dto/update-pokemon.dto';
-import { PokemonEntity } from '../entities/pokemon.entity';
-import { InjectModel } from '@nestjs/mongoose';
 import GetAllPokemonsUseCase from 'src/pokemon/application/usecases/getAllPokemons.usecase';
 import GetPokemonUseCase from 'src/pokemon/application/usecases/getPokemon.usecase';
 import UpdatePokemonUseCase from 'src/pokemon/application/usecases/updatePokemon.usecase';

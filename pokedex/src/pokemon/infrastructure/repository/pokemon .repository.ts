@@ -60,6 +60,7 @@ export class PokemonRepositoryMongo implements PokemonRepository {
     }
 
     private handleException(error: any, message: string) {
+        
         if (error.code == 11000) {
             throw new BadRequestException(`Pokemon exists in db ${JSON.stringify(error.keyValue)}`)
         } else {

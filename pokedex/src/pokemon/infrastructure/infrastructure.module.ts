@@ -13,6 +13,7 @@ import { PokemonService } from './services/pokemon.service';
       name: PokemonEntity.name,
       schema: PokemonSchema
     }]),
+    
   ],
   controllers: [PokemonController],
 })
