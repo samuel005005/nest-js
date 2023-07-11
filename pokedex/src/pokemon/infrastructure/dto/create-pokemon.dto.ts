@@ -10,5 +10,4 @@ export class CreatePokemonDto {
     @IsPositive()
     @Min(1)
     no: number;
-
 }

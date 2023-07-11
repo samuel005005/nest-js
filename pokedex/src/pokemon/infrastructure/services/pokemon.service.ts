@@ -1,86 +1,52 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreatePokemonDto } from '../dto/create-pokemon.dto';
 import { UpdatePokemonDto } from '../dto/update-pokemon.dto';
-import { Pokemon } from '../entities/pokemon.entity';
-import { Model, isValidObjectId } from 'mongoose';
+import { PokemonEntity } from '../entities/pokemon.entity';
 import { InjectModel } from '@nestjs/mongoose';
+import GetAllPokemonsUseCase from 'src/pokemon/application/usecases/getAllPokemons.usecase';
+import GetPokemonUseCase from 'src/pokemon/application/usecases/getPokemon.usecase';
+import UpdatePokemonUseCase from 'src/pokemon/application/usecases/updatePokemon.usecase';
+import PokemonMapper from '../mapper/pokemon.mapper';
+import DeletePokemonUseCase from 'src/pokemon/application/usecases/deletePokemon.usecase';
+import CreatePokemonUseCase from 'src/pokemon/application/usecases/createPokemon.usecase';
+
 
 @Injectable()
 export class PokemonService {
-
   constructor(
-    @InjectModel(Pokemon.name)
-    private readonly pokemonModel: Model<Pokemon>
+    private readonly createPokemonUseCase: CreatePokemonUseCase,
+    private readonly getAllPokemonsUseCase: GetAllPokemonsUseCase,
+    private readonly getPokemonUseCase: GetPokemonUseCase,
+    private readonly updatePokemonUseCase: UpdatePokemonUseCase,
+    private readonly deletePokemonUseCase: DeletePokemonUseCase
   ) { }
 
 
   async create(createPokemonDto: CreatePokemonDto) {
-
     createPokemonDto.name = createPokemonDto.name.toLocaleLowerCase();
-
-    try {
-      const pokemon = await this.pokemonModel.create(createPokemonDto);
-      return pokemon;
-    } catch (error) {
-      if (error.code == 11000) {
-        throw new BadRequestException(`Pokemon exists in db ${JSON.stringify(error.keyValue)}`)
-      } else {
-        console.log(error);
-        throw new InternalServerErrorException(`Can't create Pokemon, Check server logs`)
-      }
-    }
+    return this.createPokemonUseCase.handler(PokemonMapper.DtoToEntity(createPokemonDto));
   }
 
-  findAll() {
-    return this.pokemonModel.find();
+  async findAll() {
+    return this.getAllPokemonsUseCase.handler();
   }
 
   async findOne(term: string) {
-    let pokemon: Pokemon;
-
-    // Validate if is a number
-    if (!isNaN(+term)) {
-      pokemon = await this.pokemonModel.findOne({ no: term });
-    }
-
-    // Validate if is a mongo a Id
-    if (!pokemon && isValidObjectId(term)) {
-      pokemon = await this.pokemonModel.findById(term);
-    }
-
-    if (!pokemon) {
-      pokemon = await this.pokemonModel.findOne({ name: new RegExp(term.toLocaleLowerCase().trim(), 'i') });
-    }
-
-    if (!pokemon)
-      throw new NotFoundException(`Pokemon with id,name or no "${term}" not found`);
-
-    return pokemon;
+    return this.getPokemonUseCase.handler(term);
   }
 
   async update(term: string, updatePokemonDto: UpdatePokemonDto) {
-    try {
-      const pokemon = await this.findOne(term);
 
-      if (updatePokemonDto.name) {
-        updatePokemonDto.name = updatePokemonDto.name.toLocaleLowerCase();
-      }
-
-      await pokemon.updateOne(updatePokemonDto, { new: true })
-
-      return { ...pokemon.toJSON(), ...updatePokemonDto };
-
-    } catch (error) {
-      if (error.code == 11000) {
-        throw new BadRequestException(`Pokemon exists in db ${JSON.stringify(error.keyValue)}`)
-      } else {
-        console.log(error);
-        throw new InternalServerErrorException(`Can't update Pokemon, Check server logs`)
-      }
+    if (updatePokemonDto.name) {
+      updatePokemonDto.name = updatePokemonDto.name.toLocaleLowerCase();
     }
+
+    const pokemon = await this.updatePokemonUseCase.handler(term, PokemonMapper.DtoToEntity(updatePokemonDto));
+
+    return { ...pokemon, ...updatePokemonDto };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pokemon`;
+  async remove(id: string) {
+    return this.deletePokemonUseCase.handler(id);
   }
 }

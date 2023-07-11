@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
 @Schema()
-export class Pokemon extends Document {
+export class PokemonEntity extends Document {
 
     @Prop({
         unique: true,
@@ -18,4 +18,4 @@ export class Pokemon extends Document {
 
 }
 
-export const PokemonSchema = SchemaFactory.createForClass(Pokemon);
+export const PokemonSchema = SchemaFactory.createForClass(PokemonEntity);
