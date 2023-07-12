@@ -7,6 +7,8 @@ import { PokemonRepository } from 'src/pokemon/domain/ports/pokemon.repository';
 import Pokemon from 'src/pokemon/domain/models/pokemon.model';
 import PokemonMapper from '../mapper/pokemon.mapper';
 
+
+
 @Injectable()
 export class PokemonRepositoryMongo implements PokemonRepository {
 
@@ -59,8 +61,7 @@ export class PokemonRepositoryMongo implements PokemonRepository {
         return;
     }
 
-    private handleException(error: any, message: string) {
-        
+    private handleException(error: Exception, message: string) {
         if (error.code == 11000) {
             throw new BadRequestException(`Pokemon exists in db ${JSON.stringify(error.keyValue)}`)
         } else {
